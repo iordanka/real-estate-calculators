@@ -3,10 +3,727 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seller Net Sheet Calculator</title>
+  <title>Florida Seller Net Sheet Calculator</title>
+  <meta name="description" content="Estimate Florida seller net proceeds, including mortgage payoffs, brokerage compensation, documentary stamp tax, title and settlement costs, prorations, seller concessions, and other expenses.">
+  <link rel="stylesheet" href="../shared/css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Seller Net Sheet Calculator</h1>
-  <p>Calculator coming soon.</p>
+<div class="sns-shell">
+  <header class="sns-header">
+    <div class="sns-header-grid">
+      <div>
+        <div class="sns-eyebrow">Florida Seller Planning Tool</div>
+        <h1>Seller Net Sheet Calculator</h1>
+        <p>
+          Estimate how a sale price, mortgage payoffs, brokerage compensation, Florida documentary
+          stamp tax, title and settlement costs, prorations, seller concessions, and other expenses
+          may affect your expected proceeds.
+        </p>
+      </div>
+      <aside class="sns-header-card">
+        <h2>Before You Begin</h2>
+        <ul>
+          <li>Use estimated mortgage payoff amounts, not only statement balances.</li>
+          <li>Enter compensation and fees from your actual written agreements.</li>
+          <li>Replace planning estimates with a title-company quote when available.</li>
+          <li>Compare up to three possible sale-price scenarios.</li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main class="sns-main">
+    <div class="sns-toolbar">
+      <button type="button" class="sns-btn" id="resetBtn">Reset</button>
+      <button type="button" class="sns-btn" id="sampleBtn">Load Example</button>
+      <button type="button" class="sns-btn sns-btn-primary" id="printBtn">Print or Save as PDF</button>
+    </div>
+
+    <div id="errorBox" class="sns-error" role="alert"></div>
+
+    <div class="sns-grid">
+      <div class="sns-input-column">
+
+        <section class="sns-panel">
+          <div class="sns-panel-title">
+            <h2>1. Sale and Property Information</h2>
+            <p>Enter the expected contract price and closing information.</p>
+          </div>
+          <div class="sns-panel-body">
+            <div class="sns-fields sns-fields-3">
+              <div class="sns-field">
+                <label for="salePrice1">Primary sale price</label>
+                <div class="sns-money-wrap"><input id="salePrice1" type="number" min="0" step="1000" placeholder="500000"></div>
+              </div>
+              <div class="sns-field">
+                <label for="salePrice2">Alternative price</label>
+                <div class="sns-money-wrap"><input id="salePrice2" type="number" min="0" step="1000" placeholder="Optional"></div>
+              </div>
+              <div class="sns-field">
+                <label for="salePrice3">Lower-price scenario</label>
+                <div class="sns-money-wrap"><input id="salePrice3" type="number" min="0" step="1000" placeholder="Optional"></div>
+              </div>
+              <div class="sns-field">
+                <label for="closingDate">Estimated closing date</label>
+                <input id="closingDate" type="date">
+              </div>
+              <div class="sns-field">
+                <label for="countyType">Florida deed-tax area</label>
+                <select id="countyType">
+                  <option value="standard">Florida county other than Miami-Dade</option>
+                  <option value="miamiSingle">Miami-Dade: single-family dwelling</option>
+                  <option value="miamiOther">Miami-Dade: other property</option>
+                </select>
+              </div>
+              <div class="sns-field">
+                <label for="annualTaxes">Annual property taxes</label>
+                <div class="sns-money-wrap"><input id="annualTaxes" type="number" min="0" step="0.01" placeholder="Last tax bill"></div>
+                <span class="sns-help">The calculator estimates the seller's share through the closing date.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sns-panel">
+          <div class="sns-panel-title">
+            <h2>2. Mortgage, HELOC and Lien Payoffs</h2>
+            <p>Use payoff estimates that include accrued interest and lender charges when available.</p>
+          </div>
+          <div class="sns-panel-body">
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="mortgage1">First mortgage payoff</label>
+                <div class="sns-money-wrap"><input id="mortgage1" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="mortgage2">Second mortgage payoff</label>
+                <div class="sns-money-wrap"><input id="mortgage2" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="heloc">HELOC payoff</label>
+                <div class="sns-money-wrap"><input id="heloc" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="otherLiens">Other liens or judgments</label>
+                <div class="sns-money-wrap"><input id="otherLiens" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="payoffFees">Payoff, release or courier fees</label>
+                <div class="sns-money-wrap"><input id="payoffFees" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sns-panel">
+          <div class="sns-panel-title">
+            <h2>3. Brokerage Compensation and Fees</h2>
+            <p>Compensation is negotiable and should be entered from the applicable written agreements.</p>
+          </div>
+          <div class="sns-panel-body">
+            <div class="sns-section-note">
+              Sellers are not required to offer compensation to a buyer's brokerage. This calculator
+              allows either a combined amount or separate listing- and buyer-brokerage entries.
+            </div>
+
+            <div class="sns-toggle-row">
+              <label class="sns-choice"><input type="radio" name="commissionMode" value="total" checked> Enter total compensation and allocate it</label>
+              <label class="sns-choice"><input type="radio" name="commissionMode" value="separate"> Enter each brokerage separately</label>
+            </div>
+
+            <div id="totalCommissionBlock">
+              <div class="sns-fields">
+                <div class="sns-field">
+                  <label for="totalCompMethod">Total compensation method</label>
+                  <select id="totalCompMethod">
+                    <option value="percent">Percentage of sale price</option>
+                    <option value="flat">Flat dollar amount</option>
+                  </select>
+                </div>
+                <div class="sns-field" id="totalPercentField">
+                  <label for="totalCompPercent">Total compensation percentage</label>
+                  <select id="totalCompPercent">
+                    <option value="">Select percentage</option>
+                    <option value="10">10%</option>
+                    <option value="9.5">9.5%</option>
+                    <option value="9">9%</option>
+                    <option value="8.5">8.5%</option>
+                    <option value="8">8%</option>
+                    <option value="7.5">7.5%</option>
+                    <option value="7">7%</option>
+                    <option value="6.5">6.5%</option>
+                    <option value="6">6%</option>
+                    <option value="5.5">5.5%</option>
+                    <option value="5">5%</option>
+                    <option value="4.5">4.5%</option>
+                    <option value="4">4%</option>
+                    <option value="3.5">3.5%</option>
+                    <option value="3">3%</option>
+                    <option value="2.5">2.5%</option>
+                    <option value="2">2%</option>
+                    <option value="1.5">1.5%</option>
+                    <option value="1">1%</option>
+                  </select>
+                </div>
+                <div class="sns-field sns-hidden" id="totalFlatField">
+                  <label for="totalCompFlat">Total flat compensation</label>
+                  <div class="sns-money-wrap"><input id="totalCompFlat" type="number" min="0" step="0.01" placeholder="Enter agreed amount"></div>
+                </div>
+              </div>
+
+              <div class="sns-subhead">Allocation between brokerages</div>
+              <div class="sns-inline">
+                <input id="equalSplit" type="checkbox" checked>
+                <label for="equalSplit" style="margin:0;">Split the total equally between listing and buyer brokerages</label>
+              </div>
+              <div class="sns-fields" style="margin-top:14px;">
+                <div class="sns-field">
+                  <label for="listingShare">Listing brokerage share of total</label>
+                  <div class="sns-percent-wrap"><input id="listingShare" type="number" min="0" max="100" step="0.5" value="50" disabled></div>
+                </div>
+                <div class="sns-field">
+                  <label for="buyerShare">Buyer brokerage share of total</label>
+                  <div class="sns-percent-wrap"><input id="buyerShare" type="number" min="0" max="100" step="0.5" value="50" disabled></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="separateCommissionBlock" class="sns-hidden">
+              <div class="sns-subhead">Listing brokerage compensation</div>
+              <div class="sns-fields">
+                <div class="sns-field">
+                  <label for="listingMethod">Method</label>
+                  <select id="listingMethod">
+                    <option value="percent">Percentage</option>
+                    <option value="flat">Flat fee</option>
+                  </select>
+                </div>
+                <div class="sns-field" id="listingPercentField">
+                  <label for="listingPercent">Percentage</label>
+                  <div class="sns-percent-wrap"><input id="listingPercent" type="number" min="0" max="10" step="0.1" placeholder="Enter agreed percentage"></div>
+                </div>
+                <div class="sns-field sns-hidden" id="listingFlatField">
+                  <label for="listingFlat">Flat amount</label>
+                  <div class="sns-money-wrap"><input id="listingFlat" type="number" min="0" step="0.01" placeholder="Enter agreed amount"></div>
+                </div>
+              </div>
+
+              <div class="sns-subhead">Seller-paid buyer brokerage compensation, if any</div>
+              <div class="sns-fields">
+                <div class="sns-field">
+                  <label for="buyerMethod">Method</label>
+                  <select id="buyerMethod">
+                    <option value="none">No seller-paid buyer brokerage compensation</option>
+                    <option value="percent">Percentage</option>
+                    <option value="flat">Flat fee</option>
+                  </select>
+                </div>
+                <div class="sns-field sns-hidden" id="buyerPercentField">
+                  <label for="buyerPercent">Percentage</label>
+                  <div class="sns-percent-wrap"><input id="buyerPercent" type="number" min="0" max="10" step="0.1" placeholder="Enter agreed percentage"></div>
+                </div>
+                <div class="sns-field sns-hidden" id="buyerFlatField">
+                  <label for="buyerFlat">Flat amount</label>
+                  <div class="sns-money-wrap"><input id="buyerFlat" type="number" min="0" step="0.01" placeholder="Enter agreed amount"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sns-subhead">Additional brokerage or transaction fee, if applicable</div>
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="brokerFee">Additional brokerage or transaction fee</label>
+                <div class="sns-money-wrap"><input id="brokerFee" type="number" min="0" step="0.01" placeholder="Enter amount from agreement"></div>
+                <span class="sns-help">Leave blank or enter zero if none applies. No brokerage fee is prepopulated.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sns-panel">
+          <div class="sns-panel-title">
+            <h2>4. Title, Settlement and Government Charges</h2>
+            <p>Use automatic planning estimates or replace them with a title-company quote.</p>
+          </div>
+          <div class="sns-panel-body">
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="titleMode">Settlement-cost entry</label>
+                <select id="titleMode">
+                  <option value="simple">Simple planning estimate</option>
+                  <option value="itemized">Itemized title-company estimate</option>
+                </select>
+              </div>
+              <div class="sns-field">
+                <label for="titlePayer">Owner's title policy paid by seller?</label>
+                <select id="titlePayer">
+                  <option value="yes">Yes, include estimated owner's policy</option>
+                  <option value="no">No, exclude owner's policy</option>
+                  <option value="manual">Use a manually entered title premium</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="simpleTitleBlock">
+              <div class="sns-fields">
+                <div class="sns-field">
+                  <label for="simpleSettlement">General settlement and closing-services estimate</label>
+                  <div class="sns-money-wrap"><input id="simpleSettlement" type="number" min="0" step="0.01" value="650"></div>
+                  <span class="sns-help">A planning placeholder only. Replace it with a quote when available.</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="itemizedTitleBlock" class="sns-hidden">
+              <div class="sns-fields sns-fields-3">
+                <div class="sns-field"><label for="settlementFee">Settlement fee</label><div class="sns-money-wrap"><input id="settlementFee" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="wireFee">Wire fee</label><div class="sns-money-wrap"><input id="wireFee" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="recordingFees">Recording fees</label><div class="sns-money-wrap"><input id="recordingFees" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="titleSearch">Title search</label><div class="sns-money-wrap"><input id="titleSearch" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="municipalLien">Municipal lien search</label><div class="sns-money-wrap"><input id="municipalLien" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="storageFee">Scanning or storage</label><div class="sns-money-wrap"><input id="storageFee" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="additionalPayoffs">Additional payoff processing</label><div class="sns-money-wrap"><input id="additionalPayoffs" type="number" min="0" step="0.01" placeholder="0"></div></div>
+                <div class="sns-field"><label for="otherTitleFees">Other title or settlement fees</label><div class="sns-money-wrap"><input id="otherTitleFees" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              </div>
+            </div>
+
+            <div id="manualTitlePremiumBlock" class="sns-hidden" style="margin-top:16px;">
+              <div class="sns-fields">
+                <div class="sns-field">
+                  <label for="manualTitlePremium">Manual owner's title-insurance premium</label>
+                  <div class="sns-money-wrap"><input id="manualTitlePremium" type="number" min="0" step="0.01" placeholder="Enter title-company amount"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sns-section-note" style="margin-top:18px;">
+              The automatic owner's title-policy estimate uses Florida's original owner-policy rate
+              schedule. It does not apply reissue credits, new-construction discounts, endorsements,
+              assessments, or title-company-specific service charges.
+            </div>
+          </div>
+        </section>
+
+        <section class="sns-panel">
+          <div class="sns-panel-title">
+            <h2>5. Seller Concessions, HOA and Other Expenses</h2>
+            <p>Both concession fields may be used in the same transaction.</p>
+          </div>
+          <div class="sns-panel-body">
+            <div class="sns-subhead">Seller concessions</div>
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="concessionPercent">Seller contribution toward buyer closing costs and prepaid items</label>
+                <div class="sns-percent-wrap"><input id="concessionPercent" type="number" min="0" max="100" step="0.1" placeholder="0"></div>
+                <span class="sns-help">Calculated as a percentage of the contract sale price.</span>
+              </div>
+              <div class="sns-field">
+                <label for="concessionFlat">Additional seller credit or concession</label>
+                <div class="sns-money-wrap"><input id="concessionFlat" type="number" min="0" step="0.01" placeholder="0"></div>
+                <span class="sns-help">For a home warranty, repair credit, allowance, or another negotiated buyer credit.</span>
+              </div>
+            </div>
+
+            <div class="sns-subhead">HOA, condominium and other seller expenses</div>
+            <div class="sns-fields">
+              <div class="sns-field"><label for="pastDueHoa">Past-due HOA or condominium balance</label><div class="sns-money-wrap"><input id="pastDueHoa" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field"><label for="hoaFees">HOA estoppel, transfer, capital contribution or proration</label><div class="sns-money-wrap"><input id="hoaFees" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field"><label for="repairs">Seller-paid repairs or contractor invoices</label><div class="sns-money-wrap"><input id="repairs" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field"><label for="attorneyFee">Attorney fee, if applicable</label><div class="sns-money-wrap"><input id="attorneyFee" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field"><label for="otherExpense1">Other expense 1</label><div class="sns-money-wrap"><input id="otherExpense1" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field"><label for="otherExpense2">Other expense 2</label><div class="sns-money-wrap"><input id="otherExpense2" type="number" min="0" step="0.01" placeholder="0"></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="sns-summary">
+        <section class="sns-panel">
+          <div class="sns-net">
+            <div class="sns-net-label">Estimated Seller Net Proceeds</div>
+            <div id="netValue" class="sns-net-value">$0.00</div>
+            <div id="netPercent" class="sns-net-sub">0.0% of the primary sale price</div>
+          </div>
+          <div class="sns-kpis">
+            <div class="sns-kpi"><span>Primary sale price</span><strong id="kpiSalePrice">$0.00</strong></div>
+            <div class="sns-kpi"><span>Total estimated expenses</span><strong id="kpiExpenses">$0.00</strong></div>
+            <div class="sns-kpi"><span>Mortgage and lien payoffs</span><strong id="kpiPayoffs">$0.00</strong></div>
+            <div class="sns-kpi"><span>Total brokerage compensation</span><strong id="kpiCommission">$0.00</strong></div>
+          </div>
+          <div class="sns-breakdown">
+            <div class="sns-breakdown-row"><span>Listing brokerage compensation</span><strong id="listingCompResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Buyer brokerage compensation</span><strong id="buyerCompResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Additional brokerage or transaction fee</span><strong id="brokerFeeResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Documentary stamp tax on deed</span><strong id="docStampResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Owner's title-policy estimate</span><strong id="titlePremiumResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Other title and settlement costs</span><strong id="settlementResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Property-tax proration</span><strong id="taxProrationResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Percentage-based seller contribution</span><strong id="concessionPercentResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>Additional seller credit or concession</span><strong id="concessionFlatResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>HOA and other expenses</span><strong id="otherExpensesResult">$0.00</strong></div>
+            <div class="sns-breakdown-row sns-breakdown-total"><span><strong>Total estimated expenses</strong></span><strong id="totalExpensesResult">$0.00</strong></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="sns-panel">
+      <div class="sns-panel-title">
+        <h2>Sale-Price Scenario Comparison</h2>
+        <p>Flat expenses remain the same; percentage-based costs recalculate for each sale price.</p>
+      </div>
+      <div class="sns-panel-body">
+        <div class="sns-scenario-table-wrap">
+          <table class="sns-scenario-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th id="scenarioHead1">Primary</th>
+                <th id="scenarioHead2">Alternative</th>
+                <th id="scenarioHead3">Lower Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Sale price</td><td id="scSale1">$0.00</td><td id="scSale2">—</td><td id="scSale3">—</td></tr>
+              <tr><td>Mortgage, HELOC and lien payoffs</td><td id="scPayoffs1">$0.00</td><td id="scPayoffs2">—</td><td id="scPayoffs3">—</td></tr>
+              <tr><td>Brokerage compensation and fee</td><td id="scBroker1">$0.00</td><td id="scBroker2">—</td><td id="scBroker3">—</td></tr>
+              <tr><td>Government, title and settlement costs</td><td id="scClosing1">$0.00</td><td id="scClosing2">—</td><td id="scClosing3">—</td></tr>
+              <tr><td>Tax proration, concessions and other expenses</td><td id="scOther1">$0.00</td><td id="scOther2">—</td><td id="scOther3">—</td></tr>
+              <tr class="sns-scenario-net"><td>Estimated seller net proceeds</td><td id="scNet1">$0.00</td><td id="scNet2">—</td><td id="scNet3">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="sns-disclaimer">
+      <strong>Important planning notice:</strong> This calculator provides a preliminary estimate for
+      educational and planning purposes. It is not a settlement statement, closing disclosure, title
+      quote, mortgage payoff statement, tax calculation, legal advice, tax advice, appraisal, or
+      guarantee of proceeds. Actual costs depend on the contract, closing date, lender payoff statements,
+      taxes, assessments, title and settlement charges, negotiated compensation, seller contributions,
+      and other transaction-specific items. Brokerage compensation and fees are not set by law and are
+      negotiable. A seller is not required to offer compensation to a buyer's brokerage. Enter only the
+      amounts established in the applicable written agreements.
+    </div>
+  </main>
+
+  <footer class="sns-footer">This calculator is provided for educational and planning purposes only. Actual costs and proceeds vary by transaction.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const ids = [
+    "salePrice1","salePrice2","salePrice3","closingDate","countyType","annualTaxes",
+    "mortgage1","mortgage2","heloc","otherLiens","payoffFees",
+    "totalCompMethod","totalCompPercent","totalCompFlat","equalSplit","listingShare","buyerShare",
+    "listingMethod","listingPercent","listingFlat","buyerMethod","buyerPercent","buyerFlat","brokerFee",
+    "titleMode","titlePayer","simpleSettlement","settlementFee","wireFee","recordingFees","titleSearch",
+    "municipalLien","storageFee","additionalPayoffs","otherTitleFees","manualTitlePremium",
+    "concessionPercent","concessionFlat","pastDueHoa","hoaFees","repairs","attorneyFee","otherExpense1","otherExpense2"
+  ];
+  const el = {};
+  ids.forEach(id => el[id] = document.getElementById(id));
+
+  const currency = new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
+  const money = value => currency.format(Number.isFinite(value) ? value : 0);
+  const num = input => {
+    const v = parseFloat(input && input.value);
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  };
+  const pct = input => num(input) / 100;
+
+  function setDefaultDate(){
+    if(el.closingDate.value) return;
+    const d = new Date();
+    d.setDate(d.getDate()+45);
+    el.closingDate.value = [
+      d.getFullYear(),
+      String(d.getMonth()+1).padStart(2,"0"),
+      String(d.getDate()).padStart(2,"0")
+    ].join("-");
+  }
+
+  function daysThroughClosing(){
+    if(!el.closingDate.value) return 0;
+    const close = new Date(el.closingDate.value+"T12:00:00");
+    if(Number.isNaN(close.getTime())) return 0;
+    const start = new Date(close.getFullYear(),0,1,12,0,0);
+    const diff = Math.floor((close-start)/86400000)+1;
+    const yearDays = new Date(close.getFullYear(),1,29).getMonth()===1 ? 366 : 365;
+    return Math.max(0,Math.min(diff,yearDays));
+  }
+
+  function docStamp(salePrice){
+    if(salePrice<=0) return 0;
+    const units = Math.ceil(salePrice/100);
+    if(el.countyType.value==="miamiSingle") return units*0.60;
+    if(el.countyType.value==="miamiOther") return units*(0.60+0.45);
+    return units*0.70;
+  }
+
+  function originalTitlePremium(amount){
+    if(amount<=0) return 0;
+    let remaining=amount, premium=0;
+    const tiers=[
+      [100000,5.75],
+      [900000,5.00],
+      [4000000,2.50],
+      [5000000,2.25],
+      [Infinity,2.00]
+    ];
+    for(const [limit,rate] of tiers){
+      if(remaining<=0) break;
+      const segment=Math.min(remaining,limit);
+      // Florida rates are per thousand; fractional thousands are rounded in $100 units.
+      const taxableHundreds=Math.ceil(segment/100);
+      premium += taxableHundreds*(rate/10);
+      remaining -= segment;
+    }
+    return Math.max(100,premium);
+  }
+
+  function titlePremium(salePrice){
+    if(el.titlePayer.value==="no") return 0;
+    if(el.titlePayer.value==="manual") return num(el.manualTitlePremium);
+    return originalTitlePremium(salePrice);
+  }
+
+  function settlementCosts(){
+    if(el.titleMode.value==="simple") return num(el.simpleSettlement);
+    return ["settlementFee","wireFee","recordingFees","titleSearch","municipalLien",
+      "storageFee","additionalPayoffs","otherTitleFees"].reduce((sum,id)=>sum+num(el[id]),0);
+  }
+
+  function payoffs(){
+    return ["mortgage1","mortgage2","heloc","otherLiens","payoffFees"].reduce((sum,id)=>sum+num(el[id]),0);
+  }
+
+  function commissionForPrice(salePrice){
+    let listing=0,buyer=0,total=0;
+    const mode=document.querySelector('input[name="commissionMode"]:checked').value;
+    if(mode==="total"){
+      total = el.totalCompMethod.value==="flat" ? num(el.totalCompFlat) : salePrice*(parseFloat(el.totalCompPercent.value)||0)/100;
+      let listingShare=parseFloat(el.listingShare.value)||0;
+      let buyerShare=parseFloat(el.buyerShare.value)||0;
+      const shareTotal=listingShare+buyerShare;
+      if(shareTotal>0){
+        listing=total*(listingShare/shareTotal);
+        buyer=total*(buyerShare/shareTotal);
+      }else{
+        listing=total;
+      }
+    }else{
+      listing = el.listingMethod.value==="flat" ? num(el.listingFlat) : salePrice*pct(el.listingPercent);
+      if(el.buyerMethod.value==="percent") buyer=salePrice*pct(el.buyerPercent);
+      if(el.buyerMethod.value==="flat") buyer=num(el.buyerFlat);
+      total=listing+buyer;
+    }
+    return {listing,buyer,total};
+  }
+
+  function taxProration(){
+    const annual=num(el.annualTaxes);
+    if(annual<=0) return 0;
+    const days=daysThroughClosing();
+    const close=new Date(el.closingDate.value+"T12:00:00");
+    const yearDays = !Number.isNaN(close.getTime()) && new Date(close.getFullYear(),1,29).getMonth()===1 ? 366 : 365;
+    return annual*(days/yearDays);
+  }
+
+  function fixedOtherExpenses(){
+    return ["pastDueHoa","hoaFees","repairs","attorneyFee","otherExpense1","otherExpense2"].reduce((sum,id)=>sum+num(el[id]),0);
+  }
+
+  function scenario(salePrice){
+    if(!salePrice || salePrice<=0) return null;
+    const commissions=commissionForPrice(salePrice);
+    const brokerageTotal=commissions.total+num(el.brokerFee);
+    const title=titlePremium(salePrice);
+    const closing=docStamp(salePrice)+title+settlementCosts();
+    const contribution=salePrice*pct(el.concessionPercent);
+    const concessionFlat=num(el.concessionFlat);
+    const tax=taxProration();
+    const other=fixedOtherExpenses();
+    const payoffTotal=payoffs();
+    const otherGroup=tax+contribution+concessionFlat+other;
+    const expenses=payoffTotal+brokerageTotal+closing+otherGroup;
+    const net=salePrice-expenses;
+    return {
+      salePrice,commissions,brokerageTotal,title,settlement:settlementCosts(),
+      docStamp:docStamp(salePrice),closing,contribution,concessionFlat,tax,other,
+      otherGroup,payoffs:payoffTotal,expenses,net
+    };
+  }
+
+  function updateVisibility(){
+    const mode=document.querySelector('input[name="commissionMode"]:checked').value;
+    document.getElementById("totalCommissionBlock").classList.toggle("sns-hidden",mode!=="total");
+    document.getElementById("separateCommissionBlock").classList.toggle("sns-hidden",mode!=="separate");
+
+    const totalFlat=el.totalCompMethod.value==="flat";
+    document.getElementById("totalPercentField").classList.toggle("sns-hidden",totalFlat);
+    document.getElementById("totalFlatField").classList.toggle("sns-hidden",!totalFlat);
+
+    const listingFlat=el.listingMethod.value==="flat";
+    document.getElementById("listingPercentField").classList.toggle("sns-hidden",listingFlat);
+    document.getElementById("listingFlatField").classList.toggle("sns-hidden",!listingFlat);
+
+    document.getElementById("buyerPercentField").classList.toggle("sns-hidden",el.buyerMethod.value!=="percent");
+    document.getElementById("buyerFlatField").classList.toggle("sns-hidden",el.buyerMethod.value!=="flat");
+
+    document.getElementById("simpleTitleBlock").classList.toggle("sns-hidden",el.titleMode.value!=="simple");
+    document.getElementById("itemizedTitleBlock").classList.toggle("sns-hidden",el.titleMode.value!=="itemized");
+    document.getElementById("manualTitlePremiumBlock").classList.toggle("sns-hidden",el.titlePayer.value!=="manual");
+
+    el.listingShare.disabled=el.equalSplit.checked;
+    el.buyerShare.disabled=el.equalSplit.checked;
+    if(el.equalSplit.checked){el.listingShare.value=50;el.buyerShare.value=50;}
+  }
+
+  function validateShares(){
+    const mode=document.querySelector('input[name="commissionMode"]:checked').value;
+    if(mode!=="total" || el.equalSplit.checked) return "";
+    const a=parseFloat(el.listingShare.value)||0;
+    const b=parseFloat(el.buyerShare.value)||0;
+    if(a<0 || b<0) return "Brokerage allocation percentages cannot be negative.";
+    if(a+b<=0) return "Enter at least one brokerage allocation percentage.";
+    return "";
+  }
+
+  function paintAmount(node,value){
+    node.textContent=money(value);
+    node.classList.toggle("sns-negative",value<0);
+    node.classList.toggle("sns-positive",value>0);
+  }
+
+  function updateScenarioColumn(index,result){
+    const dash="—";
+    const fields=["Sale","Payoffs","Broker","Closing","Other","Net"];
+    if(!result){
+      fields.forEach(f=>document.getElementById("sc"+f+index).textContent=dash);
+      return;
+    }
+    document.getElementById("scSale"+index).textContent=money(result.salePrice);
+    document.getElementById("scPayoffs"+index).textContent=money(result.payoffs);
+    document.getElementById("scBroker"+index).textContent=money(result.brokerageTotal);
+    document.getElementById("scClosing"+index).textContent=money(result.closing);
+    document.getElementById("scOther"+index).textContent=money(result.otherGroup);
+    const netNode=document.getElementById("scNet"+index);
+    netNode.textContent=money(result.net);
+    netNode.classList.toggle("sns-negative",result.net<0);
+    netNode.classList.toggle("sns-positive",result.net>=0);
+  }
+
+  function calculate(){
+    updateVisibility();
+    const error=validateShares();
+    const errorBox=document.getElementById("errorBox");
+    errorBox.textContent=error;
+    errorBox.style.display=error?"block":"none";
+
+    const primary=scenario(num(el.salePrice1));
+    const alt=scenario(num(el.salePrice2));
+    const low=scenario(num(el.salePrice3));
+
+    if(!primary){
+      paintAmount(document.getElementById("netValue"),0);
+      document.getElementById("netPercent").textContent="Enter a primary sale price to calculate";
+      ["kpiSalePrice","kpiExpenses","kpiPayoffs","kpiCommission","listingCompResult","buyerCompResult",
+       "brokerFeeResult","docStampResult","titlePremiumResult","settlementResult","taxProrationResult",
+       "concessionPercentResult","concessionFlatResult","otherExpensesResult","totalExpensesResult"
+      ].forEach(id=>document.getElementById(id).textContent="$0.00");
+    }else{
+      paintAmount(document.getElementById("netValue"),primary.net);
+      document.getElementById("netPercent").textContent=(primary.net/primary.salePrice*100).toFixed(1)+"% of the primary sale price";
+      document.getElementById("kpiSalePrice").textContent=money(primary.salePrice);
+      document.getElementById("kpiExpenses").textContent=money(primary.expenses);
+      document.getElementById("kpiPayoffs").textContent=money(primary.payoffs);
+      document.getElementById("kpiCommission").textContent=money(primary.commissions.total);
+      document.getElementById("listingCompResult").textContent=money(primary.commissions.listing);
+      document.getElementById("buyerCompResult").textContent=money(primary.commissions.buyer);
+      document.getElementById("brokerFeeResult").textContent=money(num(el.brokerFee));
+      document.getElementById("docStampResult").textContent=money(primary.docStamp);
+      document.getElementById("titlePremiumResult").textContent=money(primary.title);
+      document.getElementById("settlementResult").textContent=money(primary.settlement);
+      document.getElementById("taxProrationResult").textContent=money(primary.tax);
+      document.getElementById("concessionPercentResult").textContent=money(primary.contribution);
+      document.getElementById("concessionFlatResult").textContent=money(primary.concessionFlat);
+      document.getElementById("otherExpensesResult").textContent=money(primary.other);
+      document.getElementById("totalExpensesResult").textContent=money(primary.expenses);
+    }
+
+    document.getElementById("scenarioHead1").textContent=primary?"Primary "+money(primary.salePrice):"Primary";
+    document.getElementById("scenarioHead2").textContent=alt?"Alternative "+money(alt.salePrice):"Alternative";
+    document.getElementById("scenarioHead3").textContent=low?"Lower "+money(low.salePrice):"Lower Price";
+    updateScenarioColumn(1,primary);
+    updateScenarioColumn(2,alt);
+    updateScenarioColumn(3,low);
+  }
+
+  function reset(){
+    document.querySelectorAll("input[type=number]").forEach(i=>i.value="");
+    document.querySelector('input[name="commissionMode"][value="total"]').checked=true;
+    el.totalCompMethod.value="percent";
+    el.totalCompPercent.value="";
+    el.equalSplit.checked=true;
+    el.listingShare.value=50;el.buyerShare.value=50;
+    el.listingMethod.value="percent";
+    el.buyerMethod.value="none";
+    el.titleMode.value="simple";
+    el.titlePayer.value="yes";
+    el.simpleSettlement.value=650;
+    el.countyType.value="standard";
+    el.closingDate.value="";
+    setDefaultDate();
+    calculate();
+  }
+
+  function loadExample(){
+    reset();
+    el.salePrice1.value=612500;
+    el.salePrice2.value=580000;
+    el.salePrice3.value=550000;
+    el.annualTaxes.value=6228.32;
+    el.mortgage1.value=570838.45;
+    el.totalCompPercent.value=5;
+    el.equalSplit.checked=true;
+    el.simpleSettlement.value=650;
+    calculate();
+  }
+
+  document.querySelectorAll(".sns-shell input, .sns-shell select").forEach(node=>{
+    node.addEventListener("input",calculate);
+    node.addEventListener("change",calculate);
+  });
+  document.querySelectorAll('input[name="commissionMode"]').forEach(node=>node.addEventListener("change",calculate));
+  el.equalSplit.addEventListener("change",calculate);
+  document.getElementById("resetBtn").addEventListener("click",reset);
+  document.getElementById("sampleBtn").addEventListener("click",loadExample);
+  document.getElementById("printBtn").addEventListener("click",()=>window.print());
+
+  // Prevent custom allocation fields from drifting if one side is edited.
+  el.listingShare.addEventListener("input",()=>{
+    if(!el.equalSplit.checked){
+      const a=Math.max(0,Math.min(100,parseFloat(el.listingShare.value)||0));
+      el.buyerShare.value=Math.max(0,100-a);
+    }
+  });
+  el.buyerShare.addEventListener("input",()=>{
+    if(!el.equalSplit.checked){
+      const b=Math.max(0,Math.min(100,parseFloat(el.buyerShare.value)||0));
+      el.listingShare.value=Math.max(0,100-b);
+    }
+  });
+
+  setDefaultDate();
+  calculate();
+})();
+</script>
+<script src="../shared/js/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
