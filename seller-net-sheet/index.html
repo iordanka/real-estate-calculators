@@ -553,7 +553,7 @@ select:focus {
 
   <main class="sns-main">
     <div class="sns-toolbar">
-      <button type="button" class="sns-btn" id="resetBtn">Reset</button>
+      <button type="button" class="sns-btn" id="resetBtn">Reset Calculator</button>
       <button type="button" class="sns-btn" id="sampleBtn">Load Example</button>
       <button type="button" class="sns-btn sns-btn-primary" id="printBtn">Print or Save as PDF</button>
     </div>
@@ -586,7 +586,7 @@ select:focus {
                 <label for="closingDate">Estimated closing date</label>
                 <input id="closingDate" type="date">
               </div>
-              <div class="sns-field">
+              <div class="sns-field" style="min-width:220px;">
                 <label for="countyType">Property Location</label>
                 <select id="countyType">
                   <option value="standard">Orlando / Central Florida</option>
@@ -597,7 +597,7 @@ select:focus {
               </div>
               <div class="sns-field">
                 <label for="annualTaxes">Annual property taxes</label>
-                <div class="sns-money-wrap"><input id="annualTaxes" type="number" min="0" step="0.01" placeholder="Last tax bill"></div>
+                <div class="sns-money-wrap"><input id="annualTaxes" type="number" min="0" step="0.01" placeholder="Last year's taxes"></div>
                 <span class="sns-help">The calculator estimates the seller's share through the closing date.</span>
               </div>
             </div>
@@ -948,7 +948,7 @@ select:focus {
     <section class="sns-panel">
       <div class="sns-panel-title">
         <h2>Sale-Price Scenario Comparison</h2>
-        <p>Flat expenses remain the same; percentage-based costs recalculate for each sale price.</p>
+        <p>See how different sale prices may affect your estimated net proceeds. Fixed costs remain the same, while percentage-based costs adjust automatically.</p>
       </div>
       <div class="sns-panel-body">
         <div class="sns-scenario-table-wrap">
@@ -956,9 +956,9 @@ select:focus {
             <thead>
               <tr>
                 <th>Category</th>
-                <th id="scenarioHead1">Primary</th>
+                <th id="scenarioHead1">Expected</th>
                 <th id="scenarioHead2">Alternative</th>
-                <th id="scenarioHead3">Lower Price</th>
+                <th id="scenarioHead3">Lowest</th>
               </tr>
             </thead>
             <tbody>
