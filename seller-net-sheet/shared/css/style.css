@@ -1,1 +1,5 @@
-/* Shared stylesheet for Real Estate Calculators */
+/* Shared styles for the Real Estate Calculators project */
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+button, input, select { font: inherit; }
+* { box-sizing: border-box; }
