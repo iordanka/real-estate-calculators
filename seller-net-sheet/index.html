@@ -57,10 +57,7 @@ select {
 }
 
 .sns-header-grid {
-  display: grid;
-  grid-template-columns: 1.25fr .75fr;
-  gap: 24px;
-  align-items: center;
+  display: block;
 }
 
 .sns-eyebrow {
@@ -559,8 +556,8 @@ select:focus {
 <body>
 <div class="sns-shell">
   <header class="sns-header">
-    <div class="sns-header-grid">
-      <div>
+    <div>
+      
         <div class="sns-eyebrow">Florida Seller Planning Tool</div>
         <h1>Seller Net Sheet Calculator</h1>
         <p>
@@ -568,16 +565,7 @@ select:focus {
           stamp tax, title and settlement costs, prorations, seller concessions, and other expenses
           may affect your expected proceeds.
         </p>
-      </div>
-      <aside class="sns-header-card">
-        <h2>Before You Begin</h2>
-        <ul>
-          <li>Use estimated mortgage payoff amounts, not only statement balances.</li>
-          <li>Enter compensation and fees from your actual written agreements.</li>
-          <li>Replace planning estimates with a title-company quote when available.</li>
-          <li>Compare up to three possible sale-price scenarios.</li>
-        </ul>
-      </aside>
+      
     </div>
   </header>
 
@@ -595,21 +583,21 @@ select:focus {
 
         <section class="sns-panel">
           <div class="sns-panel-title">
-            <h2>1. Sale and Property Information</h2>
-            <p>Enter the expected contract price and closing information.</p>
+            <h2>1. Sale Information</h2>
+            <p>Enter the expected sale price and estimated closing date.</p>
           </div>
           <div class="sns-panel-body">
             <div class="sns-fields sns-fields-3">
               <div class="sns-field">
-                <label for="salePrice1">Primary sale price</label>
+                <label for="salePrice1">Expected sale price</label>
                 <div class="sns-money-wrap"><input id="salePrice1" type="number" min="0" step="1000" placeholder="500000"></div>
               </div>
               <div class="sns-field">
-                <label for="salePrice2">Alternative price</label>
+                <label for="salePrice2">Alternative sale price</label>
                 <div class="sns-money-wrap"><input id="salePrice2" type="number" min="0" step="1000" placeholder="Optional"></div>
               </div>
               <div class="sns-field">
-                <label for="salePrice3">Lower-price scenario</label>
+                <label for="salePrice3">Lower sale price scenario</label>
                 <div class="sns-money-wrap"><input id="salePrice3" type="number" min="0" step="1000" placeholder="Optional"></div>
               </div>
               <div class="sns-field">
@@ -617,9 +605,10 @@ select:focus {
                 <input id="closingDate" type="date">
               </div>
               <div class="sns-field">
-                <label for="countyType">Florida deed-tax area</label>
+                <label for="countyType">Property Location</label>
                 <select id="countyType">
-                  <option value="standard">Florida county other than Miami-Dade</option>
+                  <option value="standard">Orlando / Central Florida</option>
+                  <option value="standard">Other Florida counties</option>
                   <option value="miamiSingle">Miami-Dade: single-family dwelling</option>
                   <option value="miamiOther">Miami-Dade: other property</option>
                 </select>
@@ -635,29 +624,29 @@ select:focus {
 
         <section class="sns-panel">
           <div class="sns-panel-title">
-            <h2>2. Mortgage, HELOC and Lien Payoffs</h2>
-            <p>Use payoff estimates that include accrued interest and lender charges when available.</p>
+            <h2>2. Mortgage Balances and Other Amounts Owed</h2>
+            <p>Enter the current balances for mortgages, a HELOC, and other amounts that may be paid from the sale proceeds.</p>
           </div>
           <div class="sns-panel-body">
             <div class="sns-fields">
               <div class="sns-field">
-                <label for="mortgage1">First mortgage payoff</label>
+                <label for="mortgage1">First mortgage balance</label>
                 <div class="sns-money-wrap"><input id="mortgage1" type="number" min="0" step="0.01" placeholder="0"></div>
               </div>
               <div class="sns-field">
-                <label for="mortgage2">Second mortgage payoff</label>
+                <label for="mortgage2">Second mortgage balance</label>
                 <div class="sns-money-wrap"><input id="mortgage2" type="number" min="0" step="0.01" placeholder="0"></div>
               </div>
               <div class="sns-field">
-                <label for="heloc">HELOC payoff</label>
+                <label for="heloc">HELOC balance</label>
                 <div class="sns-money-wrap"><input id="heloc" type="number" min="0" step="0.01" placeholder="0"></div>
               </div>
               <div class="sns-field">
-                <label for="otherLiens">Other liens or judgments</label>
+                <label for="otherLiens">Other amounts owed</label>
                 <div class="sns-money-wrap"><input id="otherLiens" type="number" min="0" step="0.01" placeholder="0"></div>
               </div>
               <div class="sns-field">
-                <label for="payoffFees">Payoff, release or courier fees</label>
+                <label for="payoffFees">Estimated lender payoff or release fees</label>
                 <div class="sns-money-wrap"><input id="payoffFees" type="number" min="0" step="0.01" placeholder="0"></div>
               </div>
             </div>
@@ -855,7 +844,7 @@ select:focus {
 
         <section class="sns-panel">
           <div class="sns-panel-title">
-            <h2>5. Seller Concessions, HOA and Other Expenses</h2>
+            <h2>5. Seller Concessions, HOA / Community Fees and Other Expenses</h2>
             <p>Both concession fields may be used in the same transaction.</p>
           </div>
           <div class="sns-panel-body">
@@ -873,14 +862,72 @@ select:focus {
               </div>
             </div>
 
-            <div class="sns-subhead">HOA, condominium and other seller expenses</div>
+            <div class="sns-subhead">HOA / Community Fees</div>
             <div class="sns-fields">
-              <div class="sns-field"><label for="pastDueHoa">Past-due HOA or condominium balance</label><div class="sns-money-wrap"><input id="pastDueHoa" type="number" min="0" step="0.01" placeholder="0"></div></div>
-              <div class="sns-field"><label for="hoaFees">HOA estoppel, transfer, capital contribution or proration</label><div class="sns-money-wrap"><input id="hoaFees" type="number" min="0" step="0.01" placeholder="0"></div></div>
-              <div class="sns-field"><label for="repairs">Seller-paid repairs or contractor invoices</label><div class="sns-money-wrap"><input id="repairs" type="number" min="0" step="0.01" placeholder="0"></div></div>
-              <div class="sns-field"><label for="attorneyFee">Attorney fee, if applicable</label><div class="sns-money-wrap"><input id="attorneyFee" type="number" min="0" step="0.01" placeholder="0"></div></div>
-              <div class="sns-field"><label for="otherExpense1">Other expense 1</label><div class="sns-money-wrap"><input id="otherExpense1" type="number" min="0" step="0.01" placeholder="0"></div></div>
-              <div class="sns-field"><label for="otherExpense2">Other expense 2</label><div class="sns-money-wrap"><input id="otherExpense2" type="number" min="0" step="0.01" placeholder="0"></div></div>
+              <div class="sns-field">
+                <label for="community1Name">HOA / community fee name</label>
+                <input id="community1Name" type="text" placeholder="HOA">
+              </div>
+              <div class="sns-field">
+                <label for="community1Fee">Regular fee amount</label>
+                <div class="sns-money-wrap"><input id="community1Fee" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="community1Frequency">How often is it paid?</label>
+                <select id="community1Frequency">
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="semiannual">Twice a year</option>
+                  <option value="annual">Yearly</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="sns-subhead">Additional Community Fee (Optional)</div>
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="community2Name">Additional fee name</label>
+                <input id="community2Name" type="text" placeholder="Condo fee, master HOA, resort fee, or other">
+              </div>
+              <div class="sns-field">
+                <label for="community2Fee">Regular fee amount</label>
+                <div class="sns-money-wrap"><input id="community2Fee" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="community2Frequency">How often is it paid?</label>
+                <select id="community2Frequency">
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="semiannual">Twice a year</option>
+                  <option value="annual">Yearly</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="sns-section-note" style="margin-top:18px;">
+              The calculator estimates the seller's share of regular HOA or community fees through
+              the closing date. The final proration may differ depending on how the association bills
+              and whether fees are paid in advance.
+            </div>
+
+            <div class="sns-subhead">Other Seller Expenses</div>
+            <div class="sns-fields">
+              <div class="sns-field">
+                <label for="repairs">Seller-paid repairs or contractor invoices</label>
+                <div class="sns-money-wrap"><input id="repairs" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="attorneyFee">Attorney fee, if applicable</label>
+                <div class="sns-money-wrap"><input id="attorneyFee" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="otherExpense1">Other expense 1</label>
+                <div class="sns-money-wrap"><input id="otherExpense1" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
+              <div class="sns-field">
+                <label for="otherExpense2">Other expense 2</label>
+                <div class="sns-money-wrap"><input id="otherExpense2" type="number" min="0" step="0.01" placeholder="0"></div>
+              </div>
             </div>
           </div>
         </section>
@@ -894,7 +941,7 @@ select:focus {
             <div id="netPercent" class="sns-net-sub">0.0% of the primary sale price</div>
           </div>
           <div class="sns-kpis">
-            <div class="sns-kpi"><span>Primary sale price</span><strong id="kpiSalePrice">$0.00</strong></div>
+            <div class="sns-kpi"><span>Expected sale price</span><strong id="kpiSalePrice">$0.00</strong></div>
             <div class="sns-kpi"><span>Total estimated expenses</span><strong id="kpiExpenses">$0.00</strong></div>
             <div class="sns-kpi"><span>Mortgage and lien payoffs</span><strong id="kpiPayoffs">$0.00</strong></div>
             <div class="sns-kpi"><span>Total brokerage compensation</span><strong id="kpiCommission">$0.00</strong></div>
@@ -909,7 +956,7 @@ select:focus {
             <div class="sns-breakdown-row"><span>Property-tax proration</span><strong id="taxProrationResult">$0.00</strong></div>
             <div class="sns-breakdown-row"><span>Percentage-based seller contribution</span><strong id="concessionPercentResult">$0.00</strong></div>
             <div class="sns-breakdown-row"><span>Additional seller credit or concession</span><strong id="concessionFlatResult">$0.00</strong></div>
-            <div class="sns-breakdown-row"><span>HOA and other expenses</span><strong id="otherExpensesResult">$0.00</strong></div>
+            <div class="sns-breakdown-row"><span>HOA / community fees and other expenses</span><strong id="otherExpensesResult">$0.00</strong></div>
             <div class="sns-breakdown-row sns-breakdown-total"><span><strong>Total estimated expenses</strong></span><strong id="totalExpensesResult">$0.00</strong></div>
           </div>
         </section>
@@ -971,7 +1018,7 @@ select:focus {
     "listingMethod","listingPercent","listingFlat","buyerMethod","buyerPercent","buyerFlat","brokerFee",
     "titleMode","titlePayer","simpleSettlement","settlementFee","wireFee","recordingFees","titleSearch",
     "municipalLien","storageFee","additionalPayoffs","otherTitleFees","manualTitlePremium",
-    "concessionPercent","concessionFlat","pastDueHoa","hoaFees","repairs","attorneyFee","otherExpense1","otherExpense2"
+    "concessionPercent","concessionFlat","community1Name","community1Fee","community1Frequency","community2Name","community2Fee","community2Frequency","repairs","attorneyFee","otherExpense1","otherExpense2"
   ];
   const el = {};
   ids.forEach(id => el[id] = document.getElementById(id));
@@ -1082,8 +1129,28 @@ select:focus {
     return annual*(days/yearDays);
   }
 
+
+  function annualizedCommunityFee(amount, frequency){
+    if(amount<=0) return 0;
+    if(frequency==="monthly") return amount*12;
+    if(frequency==="quarterly") return amount*4;
+    if(frequency==="semiannual") return amount*2;
+    return amount;
+  }
+
+  function communityFeeProration(){
+    if(!el.closingDate.value) return 0;
+    const close=new Date(el.closingDate.value+"T12:00:00");
+    if(Number.isNaN(close.getTime())) return 0;
+    const yearDays=new Date(close.getFullYear(),1,29).getMonth()===1 ? 366 : 365;
+    const days=daysThroughClosing();
+    const annual1=annualizedCommunityFee(num(el.community1Fee),el.community1Frequency.value);
+    const annual2=annualizedCommunityFee(num(el.community2Fee),el.community2Frequency.value);
+    return (annual1+annual2)*(days/yearDays);
+  }
+
   function fixedOtherExpenses(){
-    return ["pastDueHoa","hoaFees","repairs","attorneyFee","otherExpense1","otherExpense2"].reduce((sum,id)=>sum+num(el[id]),0);
+    return communityFeeProration()+["repairs","attorneyFee","otherExpense1","otherExpense2"].reduce((sum,id)=>sum+num(el[id]),0);
   }
 
   function scenario(salePrice){
@@ -1272,4 +1339,4 @@ select:focus {
 })();
 </script>
 </body>
-</html>
+</html> 
