@@ -579,7 +579,7 @@ select:focus {
                 <div class="sns-money-wrap"><input id="salePrice2" type="number" min="0" step="1000" placeholder="Optional"></div>
               </div>
               <div class="sns-field">
-                <label for="salePrice3">Lower sale price scenario</label>
+                <label for="salePrice3">Lowest sale price</label>
                 <div class="sns-money-wrap"><input id="salePrice3" type="number" min="0" step="1000" placeholder="Optional"></div>
               </div>
               <div class="sns-field">
@@ -643,7 +643,7 @@ select:focus {
           <div class="sns-panel-body">
             <div class="sns-section-note">
               Sellers are not required to offer compensation to a buyer's brokerage. This calculator
-              allows either a combined amount or separate listing- and buyer-brokerage entries.
+              allows either a combined amount or separate listing and buyer brokerage entries.
             </div>
 
             <div class="sns-toggle-row">
@@ -1255,7 +1255,7 @@ select:focus {
 
     document.getElementById("scenarioHead1").textContent=primary?"Primary "+money(primary.salePrice):"Primary";
     document.getElementById("scenarioHead2").textContent=alt?"Alternative "+money(alt.salePrice):"Alternative";
-    document.getElementById("scenarioHead3").textContent=low?"Lower "+money(low.salePrice):"Lower Price";
+    document.getElementById("scenarioHead3").textContent=low?"Lower "+money(low.salePrice):"Lowest Price";
     updateScenarioColumn(1,primary);
     updateScenarioColumn(2,alt);
     updateScenarioColumn(3,low);
