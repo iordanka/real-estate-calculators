@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Florida Seller Net Sheet Calculator</title>
-<meta name="description" content="Estimate Florida seller net proceeds, including mortgage payoffs, brokerage compensation, documentary stamp tax, title and settlement costs, tax prorations, seller concessions, HOA charges, and other expenses.">
+<title>Florida Home Selling Calculator | Seller Net Sheet & Net Proceeds Estimate</title>
+<meta name="description" content="Estimate Florida home selling costs, seller net proceeds, mortgage balances, brokerage compensation, taxes, title expenses, concessions, HOA fees, and other selling costs.">
 <style>
 
 :root {
@@ -49,56 +49,35 @@ select {
 }
 
 .sns-header {
-  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
-  color: #ffffff;
-  padding: 28px;
-  border-radius: 18px;
-  margin-bottom: 22px;
-}
-
-.sns-header-grid {
-  display: block;
-}
-
-.sns-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  font-size: 12px;
-  font-weight: 700;
-  color: #e9e1f5;
-  margin-bottom: 6px;
+  background: #ffffff;
+  color: var(--text);
+  padding: 28px 20px 18px;
+  margin-bottom: 8px;
+  text-align: center;
+  border: 0;
+  border-radius: 0;
 }
 
 .sns-header h1 {
-  margin: 0 0 10px;
-  font-size: 32px;
+  margin: 0 0 16px;
+  color: var(--purple);
+  font-size: 34px;
   line-height: 1.15;
+  font-weight: 700;
 }
 
 .sns-header p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
-  max-width: 850px;
-}
-
-.sns-header-card {
-  background: #ffffff;
+  max-width: 980px;
+  margin: 0 auto;
   color: var(--text);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid var(--border);
+  font-size: 17px;
+  line-height: 1.35;
 }
 
-.sns-header-card h2 {
-  color: var(--purple);
-  margin: 0 0 12px;
-  font-size: 22px;
-}
-
-.sns-header-card ul {
-  margin: 0;
-  padding-left: 20px;
+.sns-header-grid,
+.sns-eyebrow,
+.sns-header-card {
+  display: none;
 }
 
 .sns-main {
@@ -109,8 +88,8 @@ select {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  margin-bottom: 18px;
+  justify-content: center;
+  margin: 0 0 26px;
 }
 
 .sns-btn {
@@ -387,10 +366,11 @@ select:focus {
 }
 
 .sns-breakdown-total {
-  background: #ffffff;
-  border: 2px solid var(--gold);
-  border-radius: 12px;
-  padding: 14px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--purple);
+  border-radius: 10px;
+  padding: 14px 16px;
   margin-top: 14px;
   font-size: 16px;
   font-weight: 700;
@@ -491,7 +471,11 @@ select:focus {
   }
 
   .sns-header h1 {
-    font-size: 25px;
+    font-size: 27px;
+  }
+
+  .sns-header p {
+    font-size: 15px;
   }
 
   .sns-fields,
@@ -519,9 +503,12 @@ select:focus {
   }
 
   .sns-header {
-    background: var(--purple) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    background: #ffffff !important;
+    color: #222222 !important;
+  }
+
+  .sns-header h1 {
+    color: var(--purple) !important;
   }
 
   .sns-header-card,
@@ -556,17 +543,12 @@ select:focus {
 <body>
 <div class="sns-shell">
   <header class="sns-header">
-    <div>
-      
-        <div class="sns-eyebrow">Florida Seller Planning Tool</div>
-        <h1>Seller Net Sheet Calculator</h1>
-        <p>
-          Estimate how a sale price, mortgage payoffs, brokerage compensation, Florida documentary
-          stamp tax, title and settlement costs, prorations, seller concessions, and other expenses
-          may affect your expected proceeds.
-        </p>
-      
-    </div>
+    <h1>Florida Home Selling Calculator</h1>
+    <p>
+      Estimate your closing costs, selling expenses, and expected net proceeds before selling your
+      Florida home. This calculator provides a Florida Seller Net Sheet estimate and lets you compare
+      up to three possible sale prices to see how your estimated proceeds may change.
+    </p>
   </header>
 
   <main class="sns-main">
