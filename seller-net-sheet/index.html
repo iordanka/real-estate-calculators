@@ -1,12 +1,560 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Florida Seller Net Sheet Calculator</title>
-  <meta name="description" content="Estimate Florida seller net proceeds, including mortgage payoffs, brokerage compensation, documentary stamp tax, title and settlement costs, prorations, seller concessions, and other expenses.">
-  <link rel="stylesheet" href="../shared/css/style.css">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Seller Net Sheet Calculator</title>
+<meta name="description" content="Estimate Florida seller net proceeds, including mortgage payoffs, brokerage compensation, documentary stamp tax, title and settlement costs, tax prorations, seller concessions, HOA charges, and other expenses.">
+<style>
+
+:root {
+  --purple: #4b2e83;
+  --purple-dark: #321b5f;
+  --gold: #c9a227;
+  --light: #f7f5fb;
+  --border: #ddd7ea;
+  --text: #222222;
+  --muted: #666666;
+  --green: #286044;
+  --red: #9b2c2c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #ffffff;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.sns-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 18px;
+  background: #ffffff;
+}
+
+.sns-header {
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  color: #ffffff;
+  padding: 28px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+}
+
+.sns-header-grid {
+  display: grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.sns-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e9e1f5;
+  margin-bottom: 6px;
+}
+
+.sns-header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.sns-header p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 850px;
+}
+
+.sns-header-card {
+  background: #ffffff;
+  color: var(--text);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.sns-header-card h2 {
+  color: var(--purple);
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.sns-header-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.sns-main {
+  padding: 0;
+}
+
+.sns-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.sns-btn {
+  display: inline-block;
+  background: #ffffff;
+  color: var(--purple);
+  border: 2px solid var(--purple);
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sns-btn:hover {
+  background: var(--light);
+}
+
+.sns-btn-primary {
+  background: var(--purple);
+  color: #ffffff;
+}
+
+.sns-btn-primary:hover {
+  background: var(--purple-dark);
+}
+
+.sns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.sns-input-column {
+  min-width: 0;
+}
+
+.sns-summary {
+  position: sticky;
+  top: 18px;
+}
+
+.sns-panel {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(0,0,0,.04);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.sns-panel-title {
+  padding: 18px 20px 12px;
+  background: #ffffff;
+}
+
+.sns-panel-title h2 {
+  color: var(--purple);
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.sns-panel-title p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sns-panel-body {
+  padding: 8px 20px 20px;
+}
+
+.sns-section-note {
+  margin: 0 0 16px;
+  padding: 13px 14px;
+  background: var(--light);
+  border-left: 4px solid var(--purple);
+  border-radius: 8px;
+  color: #555555;
+  font-size: 13px;
+}
+
+.sns-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sns-fields-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.sns-field-full {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+input,
+select {
+  width: 100%;
+  border: 1px solid #cfc7df;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 15px;
+  background: #ffffff;
+  color: var(--text);
+}
+
+input:focus,
+select:focus {
+  outline: 3px solid rgba(75,46,131,.12);
+  border-color: var(--purple);
+}
+
+.sns-help {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+.sns-money-wrap,
+.sns-percent-wrap {
+  position: relative;
+}
+
+.sns-money-wrap:before {
+  content: "$";
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  color: var(--muted);
+  z-index: 1;
+}
+
+.sns-money-wrap input {
+  padding-left: 25px;
+}
+
+.sns-percent-wrap:after {
+  content: "%";
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  color: var(--muted);
+}
+
+.sns-percent-wrap input {
+  padding-right: 28px;
+}
+
+.sns-subhead {
+  color: var(--purple);
+  margin: 22px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e6e0f1;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sns-toggle-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.sns-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.sns-choice input,
+.sns-inline input[type="checkbox"] {
+  width: auto;
+}
+
+.sns-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sns-hidden {
+  display: none !important;
+}
+
+.sns-net {
+  background: var(--light);
+  border: 2px solid var(--purple);
+  padding: 22px;
+  text-align: center;
+}
+
+.sns-net-label {
+  color: var(--purple);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.sns-net-value {
+  color: var(--purple-dark);
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.sns-net-sub {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sns-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #e6e0f1;
+}
+
+.sns-kpi {
+  background: #ffffff;
+  padding: 14px;
+}
+
+.sns-kpi span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sns-kpi strong {
+  color: var(--purple-dark);
+  display: block;
+  margin-top: 3px;
+}
+
+.sns-breakdown {
+  padding: 16px 20px 20px;
+}
+
+.sns-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #e6e0f1;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.sns-breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.sns-breakdown-row strong {
+  color: var(--purple-dark);
+  text-align: right;
+}
+
+.sns-breakdown-total {
+  background: #ffffff;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sns-positive {
+  color: var(--green) !important;
+}
+
+.sns-negative {
+  color: var(--red) !important;
+}
+
+.sns-scenario-table-wrap {
+  overflow-x: auto;
+}
+
+.sns-scenario-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.sns-scenario-table th,
+.sns-scenario-table td {
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-align: right;
+}
+
+.sns-scenario-table th:first-child,
+.sns-scenario-table td:first-child {
+  text-align: left;
+}
+
+.sns-scenario-table th {
+  color: #ffffff;
+  background: var(--purple);
+}
+
+.sns-scenario-table tr:nth-child(even) td {
+  background: var(--light);
+}
+
+.sns-scenario-net td {
+  color: var(--purple-dark);
+  font-weight: 700;
+  border-top: 2px solid var(--gold);
+}
+
+.sns-disclaimer {
+  font-size: 12px;
+  color: #555555;
+  line-height: 1.45;
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.sns-disclaimer strong {
+  color: var(--purple-dark);
+}
+
+.sns-footer {
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff, #f4effb);
+  border: 1px solid var(--border);
+  color: #555555;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sns-error {
+  display: none;
+  margin-bottom: 16px;
+  padding: 13px 15px;
+  border-left: 5px solid var(--red);
+  background: #fff0f0;
+  color: #6f1e1e;
+}
+
+@media (max-width: 900px) {
+  .sns-header-grid,
+  .sns-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sns-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .sns-shell {
+    padding: 18px 12px;
+  }
+
+  .sns-header h1 {
+    font-size: 25px;
+  }
+
+  .sns-fields,
+  .sns-fields-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .sns-toolbar {
+    justify-content: stretch;
+  }
+
+  .sns-toolbar .sns-btn {
+    flex: 1;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  .sns-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  .sns-header {
+    background: var(--purple) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sns-header-card,
+  .sns-toolbar,
+  .sns-input-column,
+  .sns-disclaimer,
+  .sns-footer {
+    display: none !important;
+  }
+
+  .sns-grid {
+    display: block;
+  }
+
+  .sns-summary {
+    position: static;
+  }
+
+  .sns-panel {
+    box-shadow: none;
+  }
+
+  .sns-net,
+  .sns-scenario-table th {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+</style>
 </head>
 <body>
 <div class="sns-shell">
@@ -409,7 +957,7 @@
     </div>
   </main>
 
-  <footer class="sns-footer">This calculator is provided for educational and planning purposes only. Actual costs and proceeds vary by transaction.</footer>
+  <footer class="sns-footer">This calculator is provided for educational and planning purposes only. Actual costs and seller proceeds vary by transaction.</footer>
 </div>
 
 <script>
@@ -723,7 +1271,5 @@
   calculate();
 })();
 </script>
-<script src="../shared/js/script.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
